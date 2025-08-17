@@ -1,43 +1,142 @@
-# Ferryboat
+# Ferryboat ⚓️
 
-TODO: Delete this and the text below, and describe your gem
+**Ferryboat** is a lightweight deployment tool built by **21tycoons** for teams who want **zero-downtime deployments** without the complexity of Kubernetes or heavyweight DevOps stacks.  
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/ferryboat`. To experiment with that code, run `bin/console` for an interactive prompt.
+It’s designed for marketing sites, micro-apps, and fast-moving projects that need **confidence in production** while staying **simple, portable, and developer-friendly**.
 
-## Installation
+---
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
+## ✨ Features
 
-Install the gem and add to the application's Gemfile by executing:
+- **Zero-downtime deployments** (blue/green swap, even on a single server)
+- **Staging environments baked in**
+- **Lightweight backups** of container volumes
+- **GitHub integration** for pulling and building images
+- **Simple CLI** powered by Thor
+- **Config-driven** via `ferryboat.yml`
 
-```bash
-bundle add UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+---
+
+## 📦 Installation
+
+Add to your Gemfile:
+
+```ruby
+gem "ferryboat"
 ```
 
-If bundler is not being used to manage dependencies, install the gem by executing:
+Or install directly:
 
 ```bash
-gem install UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+gem install ferryboat
 ```
 
-## Usage
+---
 
-TODO: Write usage instructions here
+## 🚀 Usage
 
-## Development
+### Create a new project
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+```bash
+ferryboat new mysite
+cd mysite
+```
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+### Deploy to production (zero downtime)
 
-## Contributing
+```bash
+ferryboat deploy
+```
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/ferryboat. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/ferryboat/blob/main/CODE_OF_CONDUCT.md).
+### Deploy to staging
 
-## License
+```bash
+ferryboat deploy --staging
+```
 
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+### Backup before deploy
 
-## Code of Conduct
+```bash
+ferryboat backup
+```
 
-Everyone interacting in the Ferryboat project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/ferryboat/blob/main/CODE_OF_CONDUCT.md).
+### Restore a backup
+
+```bash
+ferryboat restore
+```
+
+### View logs
+
+```bash
+ferryboat logs
+```
+
+---
+
+## ⚙️ Configuration
+
+Example `ferryboat.yml`:
+
+```yaml
+production:
+  server: 203.0.113.42
+  ssh_key: ~/.ssh/myserver
+  repo: git@github.com:21tycoons/mysite.git
+  docker_registry: 21tycoons/mysite
+  domain: mysite.com
+
+staging:
+  server: 203.0.113.42
+  ssh_key: ~/.ssh/myserver
+  repo: git@github.com:21tycoons/mysite.git
+  docker_registry: 21tycoons/mysite-staging
+  domain: staging.mysite.com
+```
+
+Secrets (like Docker or GitHub tokens) should be set as environment variables.
+
+---
+
+## 🛠 Development
+
+After checking out the repo:
+
+```bash
+bin/setup
+```
+
+Run tests with:
+
+```bash
+rake spec
+```
+
+Try the interactive console:
+
+```bash
+bin/console
+```
+
+Release a new version:
+
+```bash
+bundle exec rake release
+```
+
+---
+
+## 🤝 Contributing
+
+Bug reports and pull requests are welcome at  
+👉 [https://github.com/21tycoons/ferryboat](https://github.com/21tycoons/ferryboat)  
+
+---
+
+## 📜 License
+
+Released under the MIT License. See [LICENSE](LICENSE) for details.
+
+---
+
+🚢 **Ferryboat by 21tycoons** — simple, safe deployments without the complexity.
