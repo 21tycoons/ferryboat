@@ -12,7 +12,7 @@ It’s designed for marketing sites, micro-apps, and fast-moving projects that n
 - **Staging environments baked in**
 - **Lightweight backups** of container volumes
 - **GitHub integration** for pulling and building images
-- **Simple CLI** powered by Thor
+- **Simple CLI**
 - **Config-driven** via `ferryboat.yml`
 
 ---
