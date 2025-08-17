@@ -1,6 +1,6 @@
 # Ferryboat ⚓️
 
-**Ferryboat** is a lightweight deployment tool built by **21tycoons** for teams who want **zero-downtime deployments** without the complexity of Kubernetes or heavyweight DevOps stacks.  
+**Ferryboat** is a lightweight deployment tool built by **21tycoons** for teams who want **zero-downtime deployments** for marketing/static sites without the complexity of Kubernetes or heavyweight DevOps stacks.  
 
 It’s designed for marketing sites, micro-apps, and fast-moving projects that need **confidence in production** while staying **simple, portable, and developer-friendly**.
 
