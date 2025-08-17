@@ -10,9 +10,9 @@ Gem::Specification.new do |spec|
   spec.authors       = ["21tycoons"]
   spec.email         = ["liroy@tycooncrm.com"]
 
-  spec.summary       = "Lightweight zero-downtime deployment tool."
+  spec.summary       = "Lightweight zero-downtime deployment tool for marketing/static sites."
   spec.description   = <<~DESC
-    Ferryboat is a deployment solution focused on simplicity and reliability.
+    Ferryboat is a deployment solution for marketing/static sites focused on simplicity and reliability.
     It supports zero-downtime rollouts, staging environments, and basic volume
     backups. Designed to work with Docker and SSH, it helps teams deliver code
     safely to production without unnecessary complexity.
