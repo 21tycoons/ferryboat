@@ -25,9 +25,9 @@ module Ferryboat
 
     private
 
-    def sh(cmd)
-      puts "→ #{cmd}"
-      system(cmd)
-    end
+      def sh(cmd)
+        puts "→ #{cmd}"
+        system(cmd)
+      end
   end
 end
