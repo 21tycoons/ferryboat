@@ -84,7 +84,5 @@ module Ferryboat
     end
 
     private
-
-    def blank?(s) = s.nil? || s.to_s.strip.empty?
   end
 end
