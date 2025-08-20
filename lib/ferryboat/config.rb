@@ -88,8 +88,8 @@ module Ferryboat
 
     private
 
-    def blank?(v)
-      v.nil? || v.to_s.strip.empty?
-    end
+      def blank?(v)
+        v.nil? || v.to_s.strip.empty?
+      end
   end
 end
