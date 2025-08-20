@@ -84,7 +84,5 @@ module Ferryboat
         detect_timeout: detect_timeout, auto_backup: auto_backup
       }
     end
-
-    private
   end
 end
