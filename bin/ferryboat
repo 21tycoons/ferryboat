@@ -1,0 +1,32 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+$stdout.sync = true
+
+# Quiet thread exceptions
+Thread.report_on_exception = false
+
+# Be nice on Ctrl-C and TERM
+Signal.trap("INT")  { exit 0 }
+Signal.trap("TERM") { exit 0 }
+Signal.trap("PIPE") { exit 0 } rescue nil
+
+begin
+  require "ferryboat"
+  require "ferryboat/cli" # explicit for reliability
+rescue LoadError => e
+  warn "ferryboat: failed to load library: #{e.message}"
+  warn e.backtrace.join("\n") if ENV["FERRY_DEBUG"] == "1"
+  exit 1
+end
+
+begin
+	Ferryboat::Cli.start(ARGV)
+rescue SystemExit => e
+  # Respect Thor's exit codes
+  exit e.status
+rescue => e
+	warn "ferryboat: #{e.message}"
+  warn e.backtrace.join("\n") if ENV["FERRY_DEBUG"] == "1"
+	exit 1
+end
