@@ -11,41 +11,43 @@ module Ferryboat
 
     REQUIRED_KEYS = %i[service image_repo domain].freeze
 
-    def self.from_env(env: ENV.fetch("FERRY_ENV", "production"))
-      new(
-        env:          env,
-        service:      ENV.fetch("FERRY_SERVICE", nil),
-        image_repo:   ENV.fetch("FERRY_IMAGE",  nil),
-        domain:       ENV.fetch("FERRY_DOMAIN", nil),
-        host:         ENV.fetch("FERRY_HOST", "localhost"),
-        provider:     ENV.fetch("FERRY_PROVIDER", "docker"), # docker|kamal
-        git_url:      ENV["GIT_URL"],
-        git_branch:   ENV.fetch("GIT_BRANCH", "main"),
-        health_path:  ENV.fetch("FERRY_HEALTH_PATH", "/up"),
-        health_timeout: Integer(ENV.fetch("FERRY_HEALTH_TIMEOUT", "120")),
-        detect_timeout: Integer(ENV.fetch("FERRY_TRAEFIK_DETECT_TIMEOUT", "60")),
-        auto_backup:  ENV["FERRY_AUTO_BACKUP"] == "true"
-      )
-    end
-
-    # Optional YAML loader (keeps env override semantics)
-    def self.from_file(path, env: "production")
-      data = YAML.load_file(path)
-      cfg  = (data[env] || {})
-      new(
-        env:            env,
-        service:        ENV["FERRY_SERVICE"]     || cfg["service"],
-        image_repo:     ENV["FERRY_IMAGE"]       || cfg["image_repo"] || cfg["docker_registry"],
-        domain:         ENV["FERRY_DOMAIN"]      || cfg["domain"],
-        host:           ENV["FERRY_HOST"]        || cfg["host"] || "localhost",
-        provider:       ENV["FERRY_PROVIDER"]    || cfg["provider"] || "docker",
-        git_url:        ENV["GIT_URL"]           || cfg["git_url"],
-        git_branch:     ENV["GIT_BRANCH"]        || cfg["git_branch"] || "main",
-        health_path:    ENV["FERRY_HEALTH_PATH"] || cfg["health_path"] || "/up",
-        health_timeout: Integer(ENV["FERRY_HEALTH_TIMEOUT"] || cfg["health_timeout"] || 120),
-        detect_timeout: Integer(ENV["FERRY_TRAEFIK_DETECT_TIMEOUT"] || cfg["detect_timeout"] || 60),
-        auto_backup:    (ENV["FERRY_AUTO_BACKUP"] || cfg["auto_backup"]).to_s == "true"
-      )
+    class << self
+      def from_env(env: ENV.fetch("FERRY_ENV", "production"))
+        new(
+          env:          env,
+          service:      ENV.fetch("FERRY_SERVICE", nil),
+          image_repo:   ENV.fetch("FERRY_IMAGE",  nil),
+          domain:       ENV.fetch("FERRY_DOMAIN", nil),
+          host:         ENV.fetch("FERRY_HOST", "localhost"),
+          provider:     ENV.fetch("FERRY_PROVIDER", "docker"), # docker|kamal
+          git_url:      ENV["GIT_URL"],
+          git_branch:   ENV.fetch("GIT_BRANCH", "main"),
+          health_path:  ENV.fetch("FERRY_HEALTH_PATH", "/up"),
+          health_timeout: Integer(ENV.fetch("FERRY_HEALTH_TIMEOUT", "120")),
+          detect_timeout: Integer(ENV.fetch("FERRY_TRAEFIK_DETECT_TIMEOUT", "60")),
+          auto_backup:  ENV["FERRY_AUTO_BACKUP"] == "true"
+        )
+      end
+  
+      # Optional YAML loader (keeps env override semantics)
+      def from_file(path, env: "production")
+        data = YAML.load_file(path)
+        cfg  = (data[env] || {})
+        new(
+          env:            env,
+          service:        ENV["FERRY_SERVICE"]     || cfg["service"],
+          image_repo:     ENV["FERRY_IMAGE"]       || cfg["image_repo"] || cfg["docker_registry"],
+          domain:         ENV["FERRY_DOMAIN"]      || cfg["domain"],
+          host:           ENV["FERRY_HOST"]        || cfg["host"] || "localhost",
+          provider:       ENV["FERRY_PROVIDER"]    || cfg["provider"] || "docker",
+          git_url:        ENV["GIT_URL"]           || cfg["git_url"],
+          git_branch:     ENV["GIT_BRANCH"]        || cfg["git_branch"] || "main",
+          health_path:    ENV["FERRY_HEALTH_PATH"] || cfg["health_path"] || "/up",
+          health_timeout: Integer(ENV["FERRY_HEALTH_TIMEOUT"] || cfg["health_timeout"] || 120),
+          detect_timeout: Integer(ENV["FERRY_TRAEFIK_DETECT_TIMEOUT"] || cfg["detect_timeout"] || 60),
+          auto_backup:    (ENV["FERRY_AUTO_BACKUP"] || cfg["auto_backup"]).to_s == "true"
+        )
+      end
     end
 
     def initialize(env:, service:, image_repo:, domain:, host:, provider:, git_url:, git_branch:, health_path:, health_timeout:, detect_timeout:, auto_backup:)
