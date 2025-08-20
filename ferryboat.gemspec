@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://github.com/21tycoons/ferryboat"
   spec.license       = "MIT"
 
-  spec.files         = Dir["lib/**/*", "exe/*", "README.md", "LICENSE.txt"]
+  spec.files         = Dir["lib/**/*", "bin/*", "README.md", "LICENSE.txt"]
   spec.bindir      = "bin"
   spec.executables = ["ferryboat"]
   # spec.executables   = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
