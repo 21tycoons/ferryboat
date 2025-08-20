@@ -14,38 +14,39 @@ module Ferryboat
     class << self
       def from_env(env: ENV.fetch("FERRY_ENV", "production"))
         new(
-          env:          env,
-          service:      ENV.fetch("FERRY_SERVICE", nil),
-          image_repo:   ENV.fetch("FERRY_IMAGE",  nil),
-          domain:       ENV.fetch("FERRY_DOMAIN", nil),
-          host:         ENV.fetch("FERRY_HOST", "localhost"),
-          provider:     ENV.fetch("FERRY_PROVIDER", "docker"), # docker|kamal
-          git_url:      ENV["GIT_URL"],
-          git_branch:   ENV.fetch("GIT_BRANCH", "main"),
-          health_path:  ENV.fetch("FERRY_HEALTH_PATH", "/up"),
+          env:            env,
+          service:        ENV.fetch("FERRY_SERVICE", nil),
+          image_repo:     ENV.fetch("FERRY_IMAGE",  nil),
+          domain:         ENV.fetch("FERRY_DOMAIN", nil),
+          host:           ENV.fetch("FERRY_HOST", "localhost"),
+          provider:       ENV.fetch("FERRY_PROVIDER", "docker"), # docker|kamal
+          git_url:        ENV["GIT_URL"],
+          git_branch:     ENV.fetch("GIT_BRANCH", "main"),
+          health_path:    ENV.fetch("FERRY_HEALTH_PATH", "/up"),
           health_timeout: Integer(ENV.fetch("FERRY_HEALTH_TIMEOUT", "120")),
           detect_timeout: Integer(ENV.fetch("FERRY_TRAEFIK_DETECT_TIMEOUT", "60")),
-          auto_backup:  ENV["FERRY_AUTO_BACKUP"] == "true"
+          auto_backup:    ENV["FERRY_AUTO_BACKUP"] == "true"
         )
       end
-  
+
       # Optional YAML loader (keeps env override semantics)
       def from_file(path, env: "production")
-        data = YAML.load_file(path)
-        cfg  = (data[env] || {})
+        data   = File.exist?(path) ? (YAML.load_file(path) || {}) : {}
+        config = data[env] || data[env.to_s] || data[env.to_sym] || {}
+
         new(
           env:            env,
-          service:        ENV["FERRY_SERVICE"]     || cfg["service"],
-          image_repo:     ENV["FERRY_IMAGE"]       || cfg["image_repo"] || cfg["docker_registry"],
-          domain:         ENV["FERRY_DOMAIN"]      || cfg["domain"],
-          host:           ENV["FERRY_HOST"]        || cfg["host"] || "localhost",
-          provider:       ENV["FERRY_PROVIDER"]    || cfg["provider"] || "docker",
-          git_url:        ENV["GIT_URL"]           || cfg["git_url"],
-          git_branch:     ENV["GIT_BRANCH"]        || cfg["git_branch"] || "main",
-          health_path:    ENV["FERRY_HEALTH_PATH"] || cfg["health_path"] || "/up",
-          health_timeout: Integer(ENV["FERRY_HEALTH_TIMEOUT"] || cfg["health_timeout"] || 120),
-          detect_timeout: Integer(ENV["FERRY_TRAEFIK_DETECT_TIMEOUT"] || cfg["detect_timeout"] || 60),
-          auto_backup:    (ENV["FERRY_AUTO_BACKUP"] || cfg["auto_backup"]).to_s == "true"
+          service:        ENV["FERRY_SERVICE"]     || config["service"],
+          image_repo:     ENV["FERRY_IMAGE"]       || config["image_repo"] || config["docker_registry"],
+          domain:         ENV["FERRY_DOMAIN"]      || config["domain"],
+          host:           ENV["FERRY_HOST"]        || config["host"] || "localhost",
+          provider:       ENV["FERRY_PROVIDER"]    || config["provider"] || "docker",
+          git_url:        ENV["GIT_URL"]           || config["git_url"],
+          git_branch:     ENV["GIT_BRANCH"]        || config["git_branch"] || "main",
+          health_path:    ENV["FERRY_HEALTH_PATH"] || config["health_path"] || "/up",
+          health_timeout: Integer(ENV["FERRY_HEALTH_TIMEOUT"] || config["health_timeout"] || 120),
+          detect_timeout: Integer(ENV["FERRY_TRAEFIK_DETECT_TIMEOUT"] || config["detect_timeout"] || 60),
+          auto_backup:    (ENV["FERRY_AUTO_BACKUP"] || config["auto_backup"]).to_s == "true"
         )
       end
     end
@@ -61,11 +62,11 @@ module Ferryboat
 
     def validate!
       missing = []
-      missing << :service   if blank?(service)
-      missing << :image_repo if blank?(image_repo)
-      missing << :domain    if blank?(domain)
-      return true if missing.empty?
-      raise ArgumentError, "Missing required config: #{missing.join(', ')}"
+      missing << :service     if blank?(service)
+      missing << :image_repo  if blank?(image_repo)
+      missing << :domain      if blank?(domain)
+      raise ArgumentError, "Missing required config: #{missing.join(', ')}" unless missing.empty?
+      true
     end
 
     def provider_runner
@@ -83,6 +84,12 @@ module Ferryboat
         health_path: health_path, health_timeout: health_timeout,
         detect_timeout: detect_timeout, auto_backup: auto_backup
       }
+    end
+
+    private
+
+    def blank?(v)
+      v.nil? || v.to_s.strip.empty?
     end
   end
 end
