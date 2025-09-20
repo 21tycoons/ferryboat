@@ -10,12 +10,12 @@ module Ferryboat
 
     # run a raw kamal command
     def run(*args)
-      cmd = ["kamal"]
-      cmd << "app" << "exec"
-      cmd << "--reuse" if @reuse
-      cmd << "--app" << @app if @app
-      cmd << "--" << "/bin/sh" << "-lc" << %("#{args.join(' ')}")
-      sh cmd.join(" ")
+      command = ["kamal"]
+      command << "app" << "exec"
+      command << "--reuse" if @reuse
+      command << "--app" << @app if @app
+      command << "--" << "/bin/sh" << "-lc" << %("#{args.join(' ')}")
+      sh command.join(" ")
     end
 
     # convenience: docker subcommand
@@ -25,9 +25,9 @@ module Ferryboat
 
     private
 
-      def sh(cmd)
-        puts "→ #{cmd}"
-        system(cmd)
+      def sh(command)
+        puts "→ #{command}"
+        system(command)
       end
   end
 end
